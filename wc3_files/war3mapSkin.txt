@@ -1,0 +1,20 @@
+﻿[CustomSkin]
+InfoPanelIconDamageHero=UI\Widgets\Console\Human\infocard-neutral-attack-hero.blp
+InfoPanelIconArmorHeroNeutral=UI\Widgets\Console\Human\infocard-armor-hero.blp
+
+[FrameDef]
+UPKEEP_NONE=DEPROTECTED
+UPKEEP_LOW=DEPROTECTED
+UPKEEP_HIGH=DEPROTECTED
+KEY_QUESTS=Информация
+QUESTS=Информация
+UPPER_BUTTON_QUEST_TIP=Информация (|Cfffed312F9|R)
+GAMEOVER_RESTART=Нажми меня!
+BONUS_DAMAGE=- 1 ед. повышает силу атаки на 1 ед.
+BONUS_DEFENSE_FIXED=- 10 ед. повышают защиту на 1 ед.
+BONUS_DEFENSE=- 10 ед. повышают защиту на 1 ед.
+BONUS_ATTACK_SPEED=- 1 ед. повышает скорость боя на 2%
+BONUS_HPREGEN=- 1 ед. повышает скорость восстановления здоровья на 1%
+BONUS_MANAREGEN=- 1 ед. повышает скорость восстановления маны на 1%
+BONUS_HITPOINTS=- 1 ед. увеличивает запас здоровья на 37 ед.
+BONUS_MANA=- 1 ед. увеличивает запас маны на 25 ед.
