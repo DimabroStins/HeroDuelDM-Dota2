@@ -1,8 +1,5 @@
+-- === hddm/init.lua — минимальный каркас без зависимостей ===
 if HDDM == nil then HDDM = {} end
-
--- подключаем подмодули ПОСЛЕ того как есть таблица HDDM
-require("hddm.dev")
-
 HDDM.VERSION = "0.1"
 
 function HDDM.Game()
@@ -13,6 +10,7 @@ function HDDM.Game()
     GameRules:GetGameModeEntity():SetThink(function() return self:OnThink() end, "HDDM_Pulse", 0.1)
     ListenToGameEvent("player_chat", function(keys) self:OnChat(keys) end, nil)
 
+    -- консольная команда для проверки
     Convars:RegisterCommand("hddm_ping", function()
       print("[HDDM] ping ok"); Say(nil, "HDDM: ping ok", false)
     end, "ping", 0)
@@ -27,7 +25,6 @@ function HDDM.Game()
   end
 
   function self:OnChat(keys)
-    HDDM.Dev:OnChat(keys)
     local txt = tostring(keys.text or ""):lower()
     if txt == "-hello" then
       print("[HDDM] chat hello"); Say(nil, "HDDM: hello", false)
@@ -36,5 +33,3 @@ function HDDM.Game()
 
   return self
 end
-
-return HDDM   -- <— важно: чтобы require("hddm") считался успешным
