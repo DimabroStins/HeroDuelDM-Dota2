@@ -1,29 +1,34 @@
--- === addon_game_mode.lua (диагностический загрузчик) ===
+-- === addon_game_mode.lua — аккуратный загрузчик каркаса ===
 if HDDM == nil then HDDM = {} end
-local function dbg(msg) print("[HDDM][DBG] " .. tostring(msg)) end
+local function dbg(m) print("[HDDM][DBG] " .. tostring(m)) end
 
--- Пробуем подгрузить модуль hddm/init.lua и поймать точную ошибку
-local ok, mod = pcall(function() return require("hddm.init") end)
-if not ok then
-  dbg("require FAILED: " .. tostring(mod))
+-- Даем require видеть подпапки:
+--  - scripts/vscripts/?.lua           → require("hddm.init") ищет hddm/init.lua
+--  - scripts/vscripts/?/init.lua      → require("hddm")      тоже найдет hddm/init.lua
+package.path = package.path .. ";scripts/vscripts/?.lua;scripts/vscripts/?/init.lua"
+
+-- Пробуем подключить наш каркас
+local ok, err = pcall(function() return require("hddm") end)
+if ok then
+  dbg("require OK: hddm/init.lua loaded")
 else
-  dbg("require OK: hddm.init loaded")
+  dbg("require FAILED: " .. tostring(err))
 end
 
 function Precache(_) end
 
 function Activate()
   dbg("Activate()")
-  if type(HDDM) ~= "table" or type(HDDM.Game) ~= "function" then
-    dbg("HDDM.Game not found — fallback minimal mode")
-    -- Фолбэк-пульс, чтобы видеть, что VM жива
-    GameRules:GetGameModeEntity():SetThink(function()
-      dbg(("pulse @ %.1f"):format(GameRules:GetGameTime()))
-      return 5.0
-    end, "HDDM_FallbackPulse", 0.1)
+  if type(HDDM) == "table" and type(HDDM.Game) == "function" then
+    GameRules.HDDM = HDDM.Game()
+    GameRules.HDDM:Init()
     return
   end
 
-  GameRules.HDDM = HDDM.Game()
-  GameRules.HDDM:Init()
+  -- Фолбэк, чтобы видеть жизнь VM, если каркас не загрузился
+  dbg("HDDM.Game not found — fallback pulse mode")
+  GameRules:GetGameModeEntity():SetThink(function()
+    dbg(("pulse @ %.1f"):format(GameRules:GetGameTime()))
+    return 5.0
+  end, "HDDM_FallbackPulse", 0.1)
 end
