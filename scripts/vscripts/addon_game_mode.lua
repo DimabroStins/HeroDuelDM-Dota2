@@ -1,36 +1,24 @@
--- Generated from template
+if GameMode == nil then GameMode = class({}) end
 
-if CAddonTemplateGameMode == nil then
-	CAddonTemplateGameMode = class({})
-end
+function Precache(ctx) end
 
-function Precache( context )
-	--[[
-		Precache things we know we'll use.  Possible file types include (but not limited to):
-			PrecacheResource( "model", "*.vmdl", context )
-			PrecacheResource( "soundfile", "*.vsndevts", context )
-			PrecacheResource( "particle", "*.vpcf", context )
-			PrecacheResource( "particle_folder", "particles/folder", context )
-	]]
-end
-
--- Create the game mode when we activate
 function Activate()
-	GameRules.AddonTemplate = CAddonTemplateGameMode()
-	GameRules.AddonTemplate:InitGameMode()
+  GameRules.GameMode = GameMode()
+  GameRules.GameMode:Init()
 end
 
-function CAddonTemplateGameMode:InitGameMode()
-	print( "Template addon is loaded." )
-	GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
+function GameMode:Init()
+  print("[HDDM] LOADED: Init() reached")
+  ListenToGameEvent("player_chat", Dynamic_Wrap(GameMode, "OnChat"), self)
 end
 
--- Evaluate the state of the game
-function CAddonTemplateGameMode:OnThink()
-	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-		--print( "Template addon script is running." )
-	elseif GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME then
-		return nil
-	end
-	return 1
+function GameMode:OnChat(keys)
+  local t = tostring(keys.text or "")
+  if t == "-hello" then
+    Say(nil, "Привет! Скрипт жив.", false)
+    print("[HDDM] -hello fired")
+  elseif t == "-tp0" then
+    local h = PlayerResource:GetSelectedHeroEntity(keys.playerid)
+    if h then FindClearSpaceForUnit(h, Vector(0,0,0), true) h:Stop() end
+  end
 end
