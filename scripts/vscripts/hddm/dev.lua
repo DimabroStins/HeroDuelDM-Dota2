@@ -1,34 +1,40 @@
 if HDDM == nil then HDDM = {} end
-HDDM.VERSION = "0.1"
+HDDM.Dev = HDDM.Dev or {}
 
-function HDDM.Game()
-  local self = {}
+function HDDM.Dev:OnChat(keys)
+  local pid  = keys.playerid
+  local txt  = tostring(keys.text or ""):lower()
+  local hero = PlayerResource:GetSelectedHeroEntity(pid)
 
-  function self:Init()
-    print(("[HDDM] Init v%s"):format(HDDM.VERSION))
-    GameRules:GetGameModeEntity():SetThink(function() return self:OnThink() end, "HDDM_Pulse", 0.1)
-    ListenToGameEvent("player_chat", function(keys) self:OnChat(keys) end, nil)
-
-    -- консольная команда для проверки без чата
-    Convars:RegisterCommand("hddm_ping", function()
-      print("[HDDM] ping ok"); Say(nil, "HDDM: ping ok", false)
-    end, "ping", 0)
+  if txt == "-score" then
+  local s = (HDDM and HDDM.Score and HDDM.Score:Get(pid)) or 0
+  Say(nil, string.format("Your score: %d", s), false); return true
+end
+  if txt == "-tp0" and hero then
+    FindClearSpaceForUnit(hero, Vector(0,0,0), true); hero:Stop()
+    Say(nil, "HDDM: TP to (0,0,0)", false); return true
   end
 
-  function self:OnThink()
-    if not self._t or GameRules:GetGameTime() >= self._t then
-      print(string.format("[HDDM] pulse @ %.1f", GameRules:GetGameTime()))
-      self._t = GameRules:GetGameTime() + 5
-    end
-    return 0.5
+  if txt == "-blink" and hero then
+    local f = hero:GetForwardVector()*600
+    FindClearSpaceForUnit(hero, hero:GetAbsOrigin()+Vector(f.x,f.y,0), true); hero:Stop()
+    Say(nil, "HDDM: blink 600", false); return true
   end
 
-  function self:OnChat(keys)
-    local txt = tostring(keys.text or ""):lower()
-    if txt == "-hello" then
-      print("[HDDM] chat hello"); Say(nil, "HDDM: hello", false)
-    end
+  if txt == "-dummy" and hero then
+    local pos = hero:GetAbsOrigin()+hero:GetForwardVector()*200
+    local u = CreateUnitByName("npc_dota_creep_badguys_melee", pos, true, nil, nil, DOTA_TEAM_BADGUYS)
+    if u then Say(nil, "HDDM: dummy spawned", false) end
+    return true
   end
 
-  return self
+  if txt == "-killme" and hero then
+    hero:ForceKill(false); Say(nil, "HDDM: you are dead (no respawn)", false); return true
+  end
+
+  if txt == "-time" then
+    Say(nil, string.format("HDDM: time = %.1f", GameRules:GetGameTime()), false); return true
+  end
+
+  return false
 end
