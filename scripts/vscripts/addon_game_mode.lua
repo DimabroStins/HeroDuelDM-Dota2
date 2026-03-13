@@ -87,7 +87,7 @@ function GameMode:OnChat(keys)
     return
   end
 end
- function GameMode:OnNPCSpawned(keys)
+  function GameMode:OnNPCSpawned(keys)
   local unit = EntIndexToHScript(keys.entindex or -1)
   if not unit or unit:IsNull() then return end
   if not unit:IsRealHero() then return end
@@ -95,24 +95,25 @@ end
 
   unit._hddm_setup_done = true
 
-  -- удалить стандартные скиллы
+  -- сносим стандартные абилки героя
   for i = 0, 23 do
     local ab = unit:GetAbilityByIndex(i)
     if ab then
       local name = ab:GetAbilityName()
       if name ~= "generic_hidden"
-      and name ~= "special_bonus_attributes"
-      and not string.find(name, "special_bonus") then
+        and name ~= "special_bonus_attributes"
+        and not string.find(name, "special_bonus") then
         unit:RemoveAbility(name)
       end
     end
   end
 
-  -- выдать метеор
+  -- даём нашу
   unit:AddAbility("meteor_wave")
 
   local meteor = unit:FindAbilityByName("meteor_wave")
   if meteor then
     meteor:SetLevel(1)
   end
+end
 end
