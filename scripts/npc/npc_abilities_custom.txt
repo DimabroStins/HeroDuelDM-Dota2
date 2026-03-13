@@ -1,48 +1,49 @@
-// Dota Heroes File
 "DOTAAbilities"
 {
 	"Version"		"1"
 
-	//=================================================================================================================
-	// Templar Assassin: Refraction Holdout
-	//=================================================================================================================
-	"templar_assassin_refraction_holdout"
+	"meteor_wave"
 	{
-		// General
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
-		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"	
+		"BaseClass"					"ability_lua"
+		"ScriptFile"				"meteor_wave"
+		"AbilityBehavior"			"DOTA_ABILITY_BEHAVIOR_POINT"
+		"AbilityUnitDamageType"		"DAMAGE_TYPE_MAGICAL"
+		"AbilityTextureName"		"invoker_chaos_meteor"
 
-		// Casting
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastPoint"				"0.0 0.0 0.0 0.0"
+		"AbilityCastRange"			"1000"
+		"AbilityCastPoint"			"0.3"
+		"AbilityCooldown"			"6"
+		"AbilityManaCost"			"0"
 
-		// Time		
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"17.0 17.0 17.0 17.0"
+		"MaxLevel"					"1"
+		"RequiredLevel"				"1"
 
-		// Cost
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityManaCost"				"100"
-		
-		// Special
-		//-------------------------------------------------------------------------------------------------------------
 		"AbilitySpecial"
 		{
 			"01"
 			{
-				"var_type"					"FIELD_INTEGER"
-				"damage_absorb"				"200 300 400 500"
+				"var_type"			"FIELD_INTEGER"
+				"impact_damage"		"100"
 			}
 			"02"
 			{
-				"var_type"					"FIELD_INTEGER"
-				"bonus_damage"				"20 40 60 80"
+				"var_type"			"FIELD_INTEGER"
+				"burn_damage"		"50"
+			}
+			"03"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"burn_duration"		"3.0"
 			}
 			"04"
 			{
-				"var_type"					"FIELD_FLOAT"
-				"duration"					"17.0 17.0 17.0 17.0"
+				"var_type"			"FIELD_INTEGER"
+				"radius"			"200"
+			}
+			"05"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"impact_delay"		"0.6"
 			}
 		}
 	}
