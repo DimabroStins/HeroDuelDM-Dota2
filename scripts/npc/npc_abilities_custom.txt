@@ -10,7 +10,8 @@
 		"AbilityUnitDamageType"		"DAMAGE_TYPE_MAGICAL"
 		"AbilityTextureName"		"invoker_chaos_meteor"
 
-		"AbilityCastRange"			"1000"
+		"AbilityCastRange"			"1000"	
+		"AbilityAOERadius"		"200"
 		"AbilityCastPoint"			"0.3"
 		"AbilityCooldown"			"6"
 		"AbilityManaCost"			"0"

@@ -7,11 +7,11 @@ function meteor_wave:OnSpellStart()
 	local caster = self:GetCaster()
 	local point = self:GetCursorPosition()
 
-	local impact_damage = self:GetSpecialValueFor("impact_damage")
-	local burn_damage = self:GetSpecialValueFor("burn_damage")
-	local burn_duration = self:GetSpecialValueFor("burn_duration")
-	local radius = self:GetSpecialValueFor("radius")
-	local impact_delay = self:GetSpecialValueFor("impact_delay")
+	local impact_damage = 100
+	local burn_damage = 50
+	local burn_duration = 3.0
+	local radius = 200
+	local impact_delay = 0.6
 
 	EmitSoundOnLocationWithCaster(point, "Hero_Invoker.ChaosMeteor.Cast", caster)
 
@@ -61,8 +61,8 @@ function modifier_meteor_wave_burn:IsPurgable() return true end
 function modifier_meteor_wave_burn:OnCreated()
 	if not IsServer() then return end
 
-	self.total_damage = self:GetAbility():GetSpecialValueFor("burn_damage")
-	self.duration = self:GetAbility():GetSpecialValueFor("burn_duration")
+	self.total_damage = 50
+	self.duration = 3.0
 	self.damage_per_tick = self.total_damage / self.duration
 
 	self:StartIntervalThink(1.0)
