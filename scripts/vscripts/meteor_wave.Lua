@@ -20,13 +20,13 @@ function meteor_wave:OnSpellStart()
 	EmitSoundOnLocationWithCaster(point, "Hero_Invoker.ChaosMeteor.Cast", caster)
 
 	local pfx = ParticleManager:CreateParticle(
-		"particles/units/heroes/hero_invoker/invoker_chaos_meteor_fly.vpcf",
-		PATTACH_WORLDORIGIN,
-		nil
-	)
-	ParticleManager:SetParticleControl(pfx, 0, point + Vector(0, 0, 1000))
-	ParticleManager:SetParticleControl(pfx, 1, point)
-	ParticleManager:ReleaseParticleIndex(pfx)
+	"particles/ui_mouseactions/range_finder_tower_aoe.vpcf",
+	PATTACH_WORLDORIGIN,
+	nil
+)
+ParticleManager:SetParticleControl(pfx, 0, point)
+ParticleManager:SetParticleControl(pfx, 1, Vector(radius, 0, 0))
+ParticleManager:ReleaseParticleIndex(pfx)
 
 	Timers:CreateTimer(impact_delay, function()
 		EmitSoundOnLocationWithCaster(point, "Hero_Invoker.ChaosMeteor.Impact", caster)
