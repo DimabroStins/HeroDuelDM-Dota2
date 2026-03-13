@@ -1,6 +1,10 @@
 meteor_wave = class({})
 modifier_meteor_wave_burn = class({})
 
+function meteor_wave:GetAOERadius()
+	return self:GetSpecialValueFor("radius")
+end
+
 LinkLuaModifier("modifier_meteor_wave_burn", "meteor_wave", LUA_MODIFIER_MOTION_NONE)
 
 function meteor_wave:OnSpellStart()

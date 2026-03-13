@@ -4,19 +4,19 @@
 
 	"meteor_wave"
 	{
-		"BaseClass"					"ability_lua"
+		"BaseClass"				"ability_lua"
 		"ScriptFile"				"meteor_wave"
 		"AbilityBehavior"			"DOTA_ABILITY_BEHAVIOR_POINT"
-		"AbilityUnitDamageType"		"DAMAGE_TYPE_MAGICAL"
-		"AbilityTextureName"		"invoker_chaos_meteor"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
+		"AbilityTextureName"			"invoker_chaos_meteor"
 
 		"AbilityCastRange"			"1000"	
-		"AbilityAOERadius"			"200"
+		"AOERadius" 				"200"
 		"AbilityCastPoint"			"0.3"
 		"AbilityCooldown"			"6"
-		"AbilityManaCost"			"0"
+		"AbilityManaCost"			"1"
 
-		"MaxLevel"					"1"
+		"MaxLevel"				"1"
 		"RequiredLevel"				"1"
 
 		"AbilitySpecial"
