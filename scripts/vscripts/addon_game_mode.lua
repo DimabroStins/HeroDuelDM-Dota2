@@ -76,13 +76,18 @@ end
 
 function GameMode:OnChat(keys)
   local txt = tostring(keys.text or ""):lower()
+
   if HDDM and HDDM.Dev and HDDM.Dev.OnChat then
     if HDDM.Dev:OnChat(keys) then return end
   end
+
   if txt == "-hello" then
-    print("[HDDM] chat hello"); Say(nil, "HDDM: hello", false); return
+    print("[HDDM] chat hello")
+    Say(nil, "HDDM: hello", false)
+    return
   end
-  function GameMode:OnNPCSpawned(keys)
+end
+ function GameMode:OnNPCSpawned(keys)
   local unit = EntIndexToHScript(keys.entindex or -1)
   if not unit or unit:IsNull() then return end
   if not unit:IsRealHero() then return end
@@ -90,25 +95,24 @@ function GameMode:OnChat(keys)
 
   unit._hddm_setup_done = true
 
-  -- сносим стандартные абилки героя
+  -- удалить стандартные скиллы
   for i = 0, 23 do
     local ab = unit:GetAbilityByIndex(i)
     if ab then
       local name = ab:GetAbilityName()
       if name ~= "generic_hidden"
-        and name ~= "special_bonus_attributes"
-        and not string.find(name, "special_bonus") then
+      and name ~= "special_bonus_attributes"
+      and not string.find(name, "special_bonus") then
         unit:RemoveAbility(name)
       end
     end
   end
 
-  -- даём нашу
+  -- выдать метеор
   unit:AddAbility("meteor_wave")
 
   local meteor = unit:FindAbilityByName("meteor_wave")
   if meteor then
     meteor:SetLevel(1)
   end
-end
 end
