@@ -8,24 +8,24 @@ DoIncludeScript("hddm/spawn", _G)
 DoIncludeScript("timers", _G)
 
 function Precache(_) end
-function Activate() GameRules.GameMode = GameMode(); GameRules.GameMode:Init() end
+function Activate()
+  GameRules.GameMode = GameMode()
+  GameRules.GameMode:Init()
+end
 
 function GameMode:Init()
   print("[HDDM] Init() reached")
 
   local gme = GameRules:GetGameModeEntity()
-gme:SetCustomGameForceHero("npc_dota_hero_axe")
+
+  gme:SetCustomGameForceHero("npc_dota_hero_axe")
 
   GameRules:SetHeroSelectionTime(0.0)
   GameRules:SetStrategyTime(0.0)
   GameRules:SetShowcaseTime(0.0)
   GameRules:SetPreGameTime(3.0)
 
-  -- НЕ трогаем FoW прямо тут (это крашило VM на твоём билде)
-  -- Включать туман/снимать его будем командами из dev.lua: -fow on / -fow off
-
-  -- Если хочешь авто-выключать туман — делаем это отложенно, когда всё точно инициализировалось:
-  local gme = GameRules:GetGameModeEntity()
+  -- delayed FoW
   gme:SetThink(function()
     if GameRules and GameRules.SetFogOfWarDisabled then
       GameRules:SetFogOfWarDisabled(true)
@@ -33,34 +33,37 @@ gme:SetCustomGameForceHero("npc_dota_hero_axe")
     else
       print("[HDDM] FoW API not available yet, skipping")
     end
-    return nil -- однократно
+    return nil
   end, "HDDM_FoWOnce", 0.5)
 
-  -- пульс
+  -- pulse
   gme:SetThink("OnThink", self, 0.1)
 
-  -- спавнер
+  -- spawner
   if HDDM and HDDM.Spawn and HDDM.Spawn.Init then
     HDDM.Spawn:Init()
   end
 
-  -- события
-  ListenToGameEvent("player_chat",  Dynamic_Wrap(GameMode, "OnChat"), self)
-  ListenToGameEvent("entity_killed", function(keys)
+  -- events
+  ListenToGameEvent("player_chat", Dynamic_Wrap(GameMode, "OnChat"), self)
   ListenToGameEvent("npc_spawned", Dynamic_Wrap(GameMode, "OnNPCSpawned"), self)
+
+  ListenToGameEvent("entity_killed", function(keys)
     local killed   = EntIndexToHScript(keys.entindex_killed or -1)
     local attacker = EntIndexToHScript(keys.entindex_attacker or -1)
     local kname = (killed   and killed.GetUnitName   and killed:GetUnitName())   or "<nil>"
     local aname = (attacker and attacker.GetUnitName and attacker:GetUnitName()) or "<nil>"
     print(("[HDDM][EK] killed=%s attacker=%s"):format(kname, aname))
+
     if HDDM and HDDM.Score and HDDM.Score.OnEntityKilled then
       HDDM.Score:OnEntityKilled(keys)
     end
   end, nil)
 
-  -- консольная проверка
+  -- console test
   Convars:RegisterCommand("hddm_ping", function()
-    print("[HDDM] ping ok"); Say(nil, "HDDM: ping ok", false)
+    print("[HDDM] ping ok")
+    Say(nil, "HDDM: ping ok", false)
   end, "ping", 0)
 
   GameRules:SetHeroRespawnEnabled(true)
@@ -87,7 +90,8 @@ function GameMode:OnChat(keys)
     return
   end
 end
-  function GameMode:OnNPCSpawned(keys)
+
+function GameMode:OnNPCSpawned(keys)
   local unit = EntIndexToHScript(keys.entindex or -1)
   if not unit or unit:IsNull() then return end
   if not unit:IsRealHero() then return end
@@ -95,7 +99,6 @@ end
 
   unit._hddm_setup_done = true
 
-  -- сносим стандартные абилки героя
   for i = 0, 23 do
     local ab = unit:GetAbilityByIndex(i)
     if ab then
@@ -108,12 +111,10 @@ end
     end
   end
 
-  -- даём нашу
   unit:AddAbility("meteor_wave")
 
   local meteor = unit:FindAbilityByName("meteor_wave")
   if meteor then
     meteor:SetLevel(1)
   end
-end
 end
