@@ -13,7 +13,7 @@ function meteor_wave:OnSpellStart()
 
 	local impact_damage = 100
 	local burn_damage = 50
-	local burn_duration = 3.0
+	local burn_duration = 3.1
 	local radius = 200
 	local impact_delay = 0.6
 
